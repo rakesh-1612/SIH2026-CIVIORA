@@ -46,7 +46,9 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_BASE = "http://127.0.0.1:8000/api";
+import { API_BASE_URL } from "@/lib/api";
+
+const API_BASE = API_BASE_URL;
 
 async function fetchWithRetry(url: string, options?: RequestInit, retries = 3, delayMs = 400): Promise<Response> {
   for (let i = 0; i < retries; i++) {

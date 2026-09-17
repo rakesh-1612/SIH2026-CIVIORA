@@ -11,7 +11,8 @@ import {
 import {
   ChallengeDetail, ChallengeCommentItem,
   toggleLikeChallenge, repostChallenge, undoRepostChallenge,
-  recordShareChallenge, addChallengeComment, deleteChallengeComment, reportChallengeComment
+  recordShareChallenge, addChallengeComment, deleteChallengeComment, reportChallengeComment,
+  API_BASE_URL, BACKEND_SERVER_URL
 } from "@/lib/api";
 import { PriorityBadge } from "@/components/PriorityBadge";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -96,8 +97,8 @@ export function CivicSocialCard({ challenge: initialCh, onUpdate, repostedBy }: 
     setIsTranslating(true);
     try {
       const targetLang = language || "en";
-      const resTitle = await fetch(`http://127.0.0.1:8000/api/challenges/translate?text=${encodeURIComponent(ch.title)}&target_lang=${targetLang}`).then(r => r.json());
-      const resDesc = await fetch(`http://127.0.0.1:8000/api/challenges/translate?text=${encodeURIComponent(ch.description)}&target_lang=${targetLang}`).then(r => r.json());
+      const resTitle = await fetch(`${API_BASE_URL}/challenges/translate?text=${encodeURIComponent(ch.title)}&target_lang=${targetLang}`).then(r => r.json());
+      const resDesc = await fetch(`${API_BASE_URL}/challenges/translate?text=${encodeURIComponent(ch.description)}&target_lang=${targetLang}`).then(r => r.json());
       setTranslatedText({
         title: resTitle.translated || ch.title,
         description: resDesc.translated || ch.description
@@ -115,7 +116,7 @@ export function CivicSocialCard({ challenge: initialCh, onUpdate, repostedBy }: 
     if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:")) {
       return url;
     }
-    return `http://127.0.0.1:8000${url.startsWith("/") ? "" : "/"}${url}`;
+    return `${BACKEND_SERVER_URL}${url.startsWith("/") ? "" : "/"}${url}`;
   };
 
   const handleLike = async () => {
