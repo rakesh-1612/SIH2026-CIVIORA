@@ -365,7 +365,7 @@ export interface DashboardMetrics {
     total_shares: number;
     total_comments: number;
   };
-  most_reposted_challenges?: any[];
+  most_reposted_challenges?: unknown[];
 }
 
 
@@ -1077,7 +1077,7 @@ export async function sendCiviConnectMessage(
 // ACCOUNT VERIFICATION & ADMIN MANAGEMENT API HELPERS
 // ----------------------------------------------------------------------
 
-export async function getPendingUsers(): Promise<any[]> {
+export async function getPendingUsers(): Promise<unknown[]> {
   const res = await fetchWithRetry(`${API_BASE_URL}/auth/pending-users`, {
     headers: getAuthHeaders()
   });
@@ -1088,7 +1088,7 @@ export async function getPendingUsers(): Promise<any[]> {
   return res.json();
 }
 
-export async function updateUserStatus(userId: number, account_status: string): Promise<any> {
+export async function updateUserStatus(userId: number, account_status: string): Promise<unknown> {
   const res = await fetchWithRetry(`${API_BASE_URL}/auth/users/${userId}/status`, {
     method: "PATCH",
     headers: getAuthHeaders({ "Content-Type": "application/json" }),

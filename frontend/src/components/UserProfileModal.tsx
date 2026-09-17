@@ -27,14 +27,9 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
   const [departmentSector, setDepartmentSector] = useState("");
   const [saving, setSaving] = useState(false);
 
-  // Synchronize internal state whenever modal opens or user updates
   useEffect(() => {
-    if (user) {
-      setName(user.name || "");
-      setPhone(user.phone || "");
-      setLocation(user.location || "");
-      setOrganizationName(user.organization_name || "");
-      setDepartmentSector(user.department_sector || "");
+    if (isOpen && user) {
+      requestAnimationFrame(() => setEditing(false));
     }
   }, [user, isOpen]);
 
@@ -71,8 +66,9 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
       });
       showToast("Profile details updated successfully!", "success");
       setEditing(false);
-    } catch (err: any) {
-      showToast(err.message || "Failed to update profile", "error");
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to update profile";
+      showToast(errorMsg, "error");
     } finally {
       setSaving(false);
     }

@@ -42,7 +42,7 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
   { code: "ur", nativeName: "اردو", englishName: "Urdu", label: "اردو — Urdu", dir: "rtl" },
 ];
 
-const dictionaries: Record<string, Record<string, any>> = {
+const dictionaries: Record<string, Record<string, unknown>> = {
   en, hi, ta, te, kn, ml, mr, bn, gu, pa, or, as, ur
 };
 
@@ -75,11 +75,10 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     const savedLang = localStorage.getItem("civiora_lang");
     
     if (savedActive && savedLang && dictionaries[savedLang] && savedLang !== "en") {
-      setIsTranslateActive(true);
-      setLanguageState(savedLang);
-    } else {
-      setIsTranslateActive(false);
-      setLanguageState("en");
+      requestAnimationFrame(() => {
+        setIsTranslateActive(true);
+        setLanguageState(savedLang);
+      });
     }
   }, []);
 
@@ -138,8 +137,9 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     
     const parts = key.split(".");
     
-    const getNested = (obj: any, keys: string[]): string | null => {
-      let current = obj;
+    const getNested = (obj: unknown, keys: string[]): string | null => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let current: any = obj;
       for (const k of keys) {
         if (!current || typeof current !== "object") return null;
         current = current[k];

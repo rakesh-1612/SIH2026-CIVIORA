@@ -27,14 +27,14 @@ export function CountUpNumber({
   useEffect(() => {
     if (!isInView) return;
 
-    // Respect prefers-reduced-motion
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setDisplayValue(value);
-      return;
-    }
-
+    const isReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let startTime: number | null = null;
     let animationFrameId: number;
+
+    if (isReducedMotion) {
+      animationFrameId = requestAnimationFrame(() => setDisplayValue(value));
+      return () => cancelAnimationFrame(animationFrameId);
+    }
 
     const updateCount = (timestamp: number) => {
       if (!startTime) startTime = timestamp;

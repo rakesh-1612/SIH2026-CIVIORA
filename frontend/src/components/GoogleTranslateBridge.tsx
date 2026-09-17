@@ -7,6 +7,7 @@ import { useTranslation } from "@/lib/LanguageContext";
 declare global {
   interface Window {
     googleTranslateInit?: () => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     google?: any;
   }
 }

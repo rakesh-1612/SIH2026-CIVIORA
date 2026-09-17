@@ -90,11 +90,33 @@ export default function AdminDashboardPage() {
   );
 }
 
+interface PendingUser {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  location?: string;
+  organization_name?: string;
+  department_sector?: string;
+  account_status?: string;
+}
+
+interface RechartsClickPayload {
+  district?: string;
+  fullName?: string;
+  rawStage?: string;
+  payload?: {
+    district?: string;
+    fullName?: string;
+    rawStage?: string;
+  };
+}
+
 function AdminDashboardContent() {
   const router = useRouter();
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [pendingUsers, setPendingUsers] = useState<any[]>([]);
+  const [pendingUsers, setPendingUsers] = useState<PendingUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [clearing, setClearing] = useState(false);
   const { showToast } = useToast();
@@ -112,7 +134,7 @@ function AdminDashboardContent() {
 
   const loadPendingUsers = async () => {
     try {
-      const data = await getPendingUsers();
+      const data = (await getPendingUsers()) as PendingUser[];
       setPendingUsers(data);
     } catch (err) {
       console.error("Failed to fetch pending users", err);
@@ -124,8 +146,9 @@ function AdminDashboardContent() {
       await updateUserStatus(userId, newStatus);
       showToast(`User account status updated to ${newStatus}`, "success");
       loadPendingUsers();
-    } catch (err: any) {
-      showToast(err.message || "Failed to update user status", "error");
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to update user status";
+      showToast(errorMsg, "error");
     }
   };
 
@@ -146,10 +169,9 @@ function AdminDashboardContent() {
 
   useEffect(() => {
     if (!user || user.role !== "GOVERNMENT_ADMIN") {
-      setLoading(false);
       return;
     }
-    loadData();
+    requestAnimationFrame(() => loadData());
   }, [user]);
 
   const handleClearAllData = async () => {
@@ -405,7 +427,7 @@ function AdminDashboardContent() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {pendingUsers.map((u: any) => (
+              {pendingUsers.map((u: PendingUser) => (
                 <div key={u.id} className="p-4 rounded-2xl bg-white border border-amber-200 space-y-3 shadow-xs">
                   <div className="flex items-start justify-between gap-2">
                     <div>
@@ -553,7 +575,7 @@ function AdminDashboardContent() {
                     dataKey="count"
                     fill="#4f46e5"
                     radius={[6, 6, 0, 0]}
-                    onClick={(data: any) => {
+                    onClick={(data: RechartsClickPayload) => {
                       const stage = data?.rawStage || data?.payload?.rawStage;
                       if (stage) {
                         router.push(`/projects?stage=${stage}`);
@@ -649,7 +671,7 @@ function AdminDashboardContent() {
                       name="Challenges Logged"
                       fill="#059669"
                       radius={[4, 4, 0, 0]}
-                      onClick={(data: any) => {
+                      onClick={(data: RechartsClickPayload) => {
                         const dist = data?.district || data?.payload?.district;
                         if (dist) {
                           router.push(`/projects?district=${encodeURIComponent(dist)}`);
@@ -662,7 +684,7 @@ function AdminDashboardContent() {
                       name="Active R&D Projects"
                       fill="#4f46e5"
                       radius={[4, 4, 0, 0]}
-                      onClick={(data: any) => {
+                      onClick={(data: RechartsClickPayload) => {
                         const dist = data?.district || data?.payload?.district;
                         if (dist) {
                           router.push(`/projects?district=${encodeURIComponent(dist)}`);
@@ -745,6 +767,7 @@ function AdminDashboardContent() {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-4">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {metrics.most_reposted_challenges.map((ch: any) => (
                   <div key={ch.id} className="p-5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="space-y-1">
@@ -817,7 +840,7 @@ function AdminDashboardContent() {
                       name="Active Projects"
                       fill="#4f46e5"
                       radius={[4, 4, 0, 0]}
-                      onClick={(data: any) => {
+                      onClick={(data: RechartsClickPayload) => {
                         const fn = data?.fullName || data?.payload?.fullName;
                         if (fn) {
                           router.push(`/projects?institution=${encodeURIComponent(fn)}`);
@@ -830,7 +853,7 @@ function AdminDashboardContent() {
                       name="Avg Progress %"
                       fill="#d97706"
                       radius={[4, 4, 0, 0]}
-                      onClick={(data: any) => {
+                      onClick={(data: RechartsClickPayload) => {
                         const fn = data?.fullName || data?.payload?.fullName;
                         if (fn) {
                           router.push(`/projects?institution=${encodeURIComponent(fn)}`);

@@ -107,6 +107,7 @@ function SolutionProjectsContent() {
     loadPartners();
   }, []);
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const fetchProjects = useCallback(async () => {
     try {
       let data = await getProjects();
@@ -411,8 +412,8 @@ function SolutionProjectsContent() {
                 {filteredProjectsList.map((proj: Project) => {
                   const isSel = selectedProject?.id === proj.id;
                   const totalMs = proj.milestones?.length || 0;
-                  const compMs = proj.milestones?.filter((m: any) => m.is_completed).length || 0;
-                  const currMs = proj.milestones?.find((m: any) => !m.is_completed)?.title || (totalMs > 0 ? "Completed" : "In Initiation");
+                  const compMs = proj.milestones?.filter((m: { is_completed?: boolean }) => m.is_completed).length || 0;
+                  const currMs = proj.milestones?.find((m: { is_completed?: boolean; title?: string }) => !m.is_completed)?.title || (totalMs > 0 ? "Completed" : "In Initiation");
 
                   const activeFundReq = proj.funding_requests?.[0];
                   let fundBadge = { label: "Not Requested", bg: "bg-slate-100 text-slate-600 border-slate-200" };

@@ -97,16 +97,17 @@ export function CiviConnectChat({ projectId, projectName, challengeTitle }: Civi
         return msgData;
       });
       setError(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("CIVI-CONNECT fetch error:", err);
-      setError(err.message || "Unable to access CIVI-CONNECT collaboration room");
+      const msg = err instanceof Error ? err.message : "Unable to access CIVI-CONNECT collaboration room";
+      setError(msg);
     } finally {
       if (isInitial) setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchChatData(true);
+    requestAnimationFrame(() => fetchChatData(false));
 
     // Polling interval for real-time collaboration (every 3 seconds)
     const interval = setInterval(() => {
@@ -158,8 +159,9 @@ export function CiviConnectChat({ projectId, projectName, challengeTitle }: Civi
       setTimeout(() => {
         scrollInternalChatToBottom(true);
       }, 60);
-    } catch (err: any) {
-      showToast(err.message || "Failed to send message", "error");
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to send message";
+      showToast(errorMsg, "error");
     } finally {
       setSending(false);
       setUploadingFile(false);

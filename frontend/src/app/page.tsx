@@ -111,8 +111,9 @@ function WelcomeLoginView() {
     setAuthError(null);
     try {
       await quickLoginDemo(role);
-    } catch (e: any) {
-      setAuthError(e.message || "Demo login failed");
+    } catch (e: unknown) {
+      const errorMsg = e instanceof Error ? e.message : "Demo login failed";
+      setAuthError(errorMsg);
     } finally {
       setLoadingRole(null);
     }
@@ -133,8 +134,9 @@ function WelcomeLoginView() {
     try {
       await login(signInEmail, signInPassword);
       showToast("Signed in successfully!", "success");
-    } catch (err: any) {
-      setAuthError(err.message || "Invalid email or password.");
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : "Invalid email or password.";
+      setAuthError(errorMsg);
     } finally {
       setAuthLoading(false);
     }
@@ -187,8 +189,9 @@ function WelcomeLoginView() {
       } else {
         showToast("Account created successfully! Welcome to CIVIORA.", "success");
       }
-    } catch (err: any) {
-      setAuthError(err.message || "Registration failed.");
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : "Registration failed.";
+      setAuthError(errorMsg);
     } finally {
       setAuthLoading(false);
     }
@@ -213,8 +216,9 @@ function WelcomeLoginView() {
         }
       }
       setForgotStep(2);
-    } catch (err: any) {
-      setForgotMessage(err.message || "Failed to process password reset request.");
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to process password reset request.";
+      setForgotMessage(errorMsg);
     } finally {
       setForgotLoading(false);
     }
@@ -243,8 +247,9 @@ function WelcomeLoginView() {
       setIsForgotModalOpen(false);
       setAuthMode("SIGN_IN");
       setSignInEmail(forgotEmail);
-    } catch (err: any) {
-      setForgotMessage(err.message || "Failed to reset password.");
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to reset password.";
+      setForgotMessage(errorMsg);
     } finally {
       setForgotLoading(false);
     }
@@ -383,7 +388,7 @@ function WelcomeLoginView() {
                 </button>
 
                 <div className="pt-2 text-center">
-                  <span className="text-xs text-slate-500 font-medium">Don't have an account?</span>
+                  <span className="text-xs text-slate-500 font-medium">Don&apos;t have an account?</span>
                   <button
                     type="button"
                     onClick={() => { setAuthMode("SIGN_UP"); setAuthError(null); }}
@@ -934,7 +939,7 @@ function CitizenDashboardView() {
 
   useEffect(() => {
     if (activeMainTab === "FEED") {
-      fetchFeed();
+      requestAnimationFrame(() => fetchFeed());
     }
   }, [activeMainTab, activeFeedTab, selectedCategory, searchQuery, coords]);
 
@@ -953,7 +958,7 @@ function CitizenDashboardView() {
 
   useEffect(() => {
     if (activeMainTab === "ACTIVITY") {
-      fetchActivity();
+      requestAnimationFrame(() => fetchActivity());
     }
   }, [activeMainTab]);
 
@@ -1203,6 +1208,7 @@ function CitizenDashboardView() {
               </div>
             ) : (
               <div className="space-y-5">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {feedItems.map((ch: any) => (
                   <CivicSocialCard key={ch.id} challenge={ch} onUpdate={fetchFeed} />
                 ))}
@@ -1368,6 +1374,7 @@ function CitizenDashboardView() {
                       </Link>
                     </div>
                   ) : (
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     activityData?.my_challenges.map((ch: any) => {
                       const currentStageIndex = LIFECYCLE_STAGES.indexOf(ch.status);
                       const stagePct = currentStageIndex >= 0 ? Math.round(((currentStageIndex + 1) / LIFECYCLE_STAGES.length) * 100) : 20;
@@ -1433,9 +1440,10 @@ function CitizenDashboardView() {
                 <div className="space-y-6">
                   {activityData?.liked_challenges.length === 0 ? (
                     <div className="p-10 text-center bg-white rounded-3xl border border-slate-200 text-xs text-slate-500 font-medium">
-                      You haven't liked any challenges yet.
+                      You haven&apos;t liked any challenges yet.
                     </div>
                   ) : (
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     activityData?.liked_challenges.map((ch: any) => (
                       <CivicSocialCard key={ch.id} challenge={ch} onUpdate={fetchActivity} />
                     ))
@@ -1448,9 +1456,10 @@ function CitizenDashboardView() {
                 <div className="space-y-6">
                   {activityData?.reposted_challenges.length === 0 ? (
                     <div className="p-10 text-center bg-white rounded-3xl border border-slate-200 text-xs text-slate-500 font-medium">
-                      You haven't reposted any challenges yet.
+                      You haven&apos;t reposted any challenges yet.
                     </div>
                   ) : (
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     activityData?.reposted_challenges.map((ch: any) => (
                       <CivicSocialCard key={ch.id} challenge={ch} onUpdate={fetchActivity} repostedBy={user?.name} />
                     ))
@@ -1463,9 +1472,10 @@ function CitizenDashboardView() {
                 <div className="space-y-4">
                   {activityData?.my_comments.length === 0 ? (
                     <div className="p-10 text-center bg-white rounded-3xl border border-slate-200 text-xs text-slate-500 font-medium">
-                      You haven't posted any comments yet.
+                      You haven&apos;t posted any comments yet.
                     </div>
                   ) : (
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     activityData?.my_comments.map((comm: any) => (
                       <div key={comm.id} className="p-5 rounded-3xl bg-white border border-slate-200 space-y-2 shadow-xs">
                         <div className="flex items-center justify-between text-xs">
@@ -1475,7 +1485,7 @@ function CitizenDashboardView() {
                           <span className="text-[11px] text-slate-400 font-mono">{new Date(comm.created_at).toLocaleDateString()}</span>
                         </div>
                         <p className="text-xs text-slate-800 font-medium bg-slate-50 p-3 rounded-2xl border border-slate-200">
-                          "{comm.content}"
+                          &quot;{comm.content}&quot;
                         </p>
                       </div>
                     ))

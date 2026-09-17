@@ -22,10 +22,8 @@ export function Navbar() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
 
   useEffect(() => {
-    if (!user) {
-      setNotifications([]);
-      return;
-    }
+    if (!user) return;
+
     async function fetchNotifs() {
       try {
         const data = await getNotifications();
@@ -39,7 +37,8 @@ export function Navbar() {
     return () => clearInterval(interval);
   }, [user]);
 
-  const unreadCount = notifications.filter((n) => !n.is_read).length;
+  const activeNotifications = user ? notifications : [];
+  const unreadCount = activeNotifications.filter((n) => !n.is_read).length;
 
   const handleMarkRead = async (id: number) => {
     try {
@@ -209,10 +208,10 @@ export function Navbar() {
                     </div>
 
                     <div className="max-h-80 overflow-y-auto divide-y divide-slate-100">
-                      {notifications.length === 0 ? (
+                      {activeNotifications.length === 0 ? (
                         <div className="p-6 text-center text-xs text-slate-500">No notifications available.</div>
                       ) : (
-                        notifications.slice(0, 5).map((n) => (
+                        activeNotifications.slice(0, 5).map((n) => (
                           <div
                             key={n.id}
                             onClick={() => handleNotificationClick(n)}

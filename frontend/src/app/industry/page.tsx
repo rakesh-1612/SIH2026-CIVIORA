@@ -35,7 +35,6 @@ function IndustryHubContent() {
 
   const loadData = useCallback(async () => {
     if (!user || !["INDUSTRY_PARTNER", "UNIVERSITY", "GOVERNMENT_ADMIN"].includes(user.role)) {
-      setLoading(false);
       return;
     }
     try {
@@ -49,7 +48,7 @@ function IndustryHubContent() {
   }, [user]);
 
   useEffect(() => {
-    loadData();
+    requestAnimationFrame(() => loadData());
   }, [loadData]);
 
   const handleAmountChange = (newAmtStr: string) => {
