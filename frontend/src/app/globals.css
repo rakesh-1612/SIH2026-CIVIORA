@@ -1,0 +1,320 @@
+@import "tailwindcss";
+
+@theme {
+  --color-civi-bg-main: #f8fafc;
+  --color-civi-surface-card: #ffffff;
+  --color-civi-surface-subtle: #f9fafb;
+  --color-civi-text-primary: #172033;
+  --color-civi-text-secondary: #64748b;
+  --color-civi-border: #e2e8f0;
+
+  /* Functional Identity Accent Tokens */
+  --color-civi-indigo: #4f46e5;
+  --color-civi-orange: #f97316;
+  --color-civi-pink: #f43f5e;
+  --color-civi-violet: #8b5cf6;
+  --color-civi-skyblue: #0ea5e9;
+  --color-civi-emerald: #10b981;
+  --color-civi-blue: #3b82f6;
+  --color-civi-amber: #f59e0b;
+  --color-civi-red: #ef4444;
+  --color-civi-green: #22c55e;
+  --color-civi-teal: #14b8a6;
+  --color-civi-magenta: #a855f7;
+  --color-civi-deepblue: #2563eb;
+}
+
+@layer base {
+  body {
+    background-color: #f8fafc;
+    color: #172033;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+}
+
+/* Centralized CIVIORA Colorful Social Visual Color Tokens */
+:root {
+  --civi-bg-main: #f8fafc;
+  --civi-surface-card: #ffffff;
+  --civi-surface-subtle: #f9fafb;
+  --civi-text-main: #172033;
+  --civi-text-muted: #64748b;
+  --civi-border: #e2e8f0;
+
+  --civi-primary-indigo: #4f46e5;
+  --civi-accent-orange: #f97316;
+  --civi-accent-pink: #f43f5e;
+  --civi-accent-violet: #8b5cf6;
+  --civi-accent-skyblue: #0ea5e9;
+  --civi-accent-emerald: #10b981;
+  --civi-accent-blue: #3b82f6;
+  --civi-accent-amber: #f59e0b;
+  --civi-accent-red: #ef4444;
+  --civi-accent-green: #22c55e;
+  --civi-accent-teal: #14b8a6;
+  --civi-accent-magenta: #a855f7;
+  --civi-accent-deepblue: #2563eb;
+}
+
+/* Modern Social Platform Cards (Clean White with Subtle Hover Elevation) */
+.civiora-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
+  border-radius: 1.25rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.civiora-card-interactive {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px -1px rgba(15, 23, 42, 0.03);
+  border-radius: 1.25rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.civiora-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.08);
+}
+
+/* Portal Specific Identity Atmosphere Cards */
+.portal-citizen-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+.portal-citizen-card:hover {
+  border-color: #818cf8;
+  box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.1);
+}
+
+.portal-university-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+.portal-university-card:hover {
+  border-color: #818cf8;
+  box-shadow: 0 8px 20px -4px rgba(99, 102, 241, 0.12);
+}
+
+.portal-industry-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+.portal-industry-card:hover {
+  border-color: #2dd4bf;
+  box-shadow: 0 8px 20px -4px rgba(20, 184, 166, 0.12);
+}
+
+.portal-government-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+.portal-government-card:hover {
+  border-color: #60a5fa;
+  box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.12);
+}
+
+/* Inputs & Selects */
+.civiora-input {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #172033;
+  transition: all 0.2s ease-in-out;
+}
+
+.civiora-input:focus {
+  background-color: #ffffff;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+  outline: none;
+}
+
+/* Tactile Responsive Buttons */
+.btn-civic-primary {
+  background-color: #4f46e5;
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 0.85rem;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px 0 rgba(79, 70, 229, 0.25);
+}
+
+.btn-civic-primary:hover {
+  background-color: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px 0 rgba(79, 70, 229, 0.35);
+}
+
+.btn-civic-primary:active {
+  transform: translateY(0px) scale(0.98);
+  background-color: #3730a3;
+}
+
+.btn-civic-secondary {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #172033;
+  font-weight: 700;
+  border-radius: 0.85rem;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-civic-secondary:hover {
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+}
+
+.btn-civic-secondary:active {
+  transform: scale(0.98);
+}
+
+.btn-civic-gold {
+  background-color: #f59e0b;
+  color: #ffffff;
+  font-weight: 800;
+  border-radius: 0.85rem;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px 0 rgba(245, 158, 11, 0.25);
+}
+
+.btn-civic-gold:hover {
+  background-color: #d97706;
+  transform: translateY(-1px);
+}
+
+.btn-civic-gold:active {
+  transform: scale(0.98);
+}
+
+/* Modern Pill Badges */
+.civiora-badge-navy {
+  background-color: #e0e7ff;
+  border-color: #c7d2fe;
+  color: #3730a3;
+}
+
+.civiora-badge-gold {
+  background-color: #fef3c7;
+  border-color: #fde68a;
+  color: #b45309;
+}
+
+.civiora-badge-green {
+  background-color: #dcfce7;
+  border-color: #bbf7d0;
+  color: #15803d;
+}
+
+.civiora-badge-red {
+  background-color: #fee2e2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+/* Leaflet Popups Light Styling */
+.leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+  color: #172033 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1) !important;
+}
+
+/* Scrollbar customization */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Social Micro-Interaction Animations */
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+@keyframes repost-spin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.2); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes flame-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.85; }
+}
+
+.animate-heart-pop {
+  animation: heart-pop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.animate-repost-spin {
+  animation: repost-spin 0.45s ease-in-out;
+}
+
+.animate-flame-pulse {
+  animation: flame-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-heart-pop,
+  .animate-repost-spin,
+  .animate-flame-pulse {
+    animation: none !important;
+  }
+}
+
+/* Google Translate Widget & Banner UI Clean-up */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame {
+  display: none !important;
+}
+body {
+  top: 0px !important;
+}
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+#goog-gt-tt, 
+.goog-te-balloon-frame,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+}
+.goog-te-combo {
+  display: none !important;
+}
+.skiptranslate {
+  font-size: 0px !important;
+}
+.skiptranslate * {
+  font-size: initial;
+}
+
+
+
+
+
+

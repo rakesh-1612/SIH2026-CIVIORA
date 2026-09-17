@@ -1,0 +1,10 @@
+{
+  "name": "civiora-root",
+  "version": "1.0.0",
+  "description": "CIVIORA Smart India Hackathon Platform Root Automation",
+  "private": true,
+  "scripts": {
+    "demo": "node scripts/start-demo.js",
+    "dev": "node scripts/start-demo.js"
+  }
+}
