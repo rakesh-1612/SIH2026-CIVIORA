@@ -75,12 +75,6 @@ export default function ChallengeExplorerPage() {
             <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Challenge Catalog</h1>
             <p className="text-sm text-slate-600 font-semibold">Search, filter, and inspect AI intelligence & duplicate scores across all reported societal challenges.</p>
           </div>
-          <Link
-            href="/submit"
-            className="px-5 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs font-extrabold shadow-xs transition-all active:scale-[0.98] inline-flex items-center gap-2 self-start md:self-auto"
-          >
-            + Submit New Challenge
-          </Link>
         </div>
       </FadeIn>
 

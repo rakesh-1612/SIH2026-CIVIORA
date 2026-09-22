@@ -287,8 +287,22 @@
 
 /* Google Translate Widget & Banner UI Clean-up */
 .goog-te-banner-frame.skiptranslate,
-.goog-te-banner-frame {
+.goog-te-banner-frame,
+#goog-gt-tt, 
+.goog-te-balloon-frame,
+.goog-tooltip,
+.goog-tooltip:hover {
   display: none !important;
+}
+#google_translate_element {
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
 }
 body {
   top: 0px !important;
@@ -297,20 +311,8 @@ body {
   background-color: transparent !important;
   box-shadow: none !important;
 }
-#goog-gt-tt, 
-.goog-te-balloon-frame,
-.goog-tooltip,
-.goog-tooltip:hover {
-  display: none !important;
-}
 .goog-te-combo {
   display: none !important;
-}
-.skiptranslate {
-  font-size: 0px !important;
-}
-.skiptranslate * {
-  font-size: initial;
 }
 
 

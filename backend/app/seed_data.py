@@ -141,12 +141,19 @@ CHALLENGES_SEED_RAW = [
     }
 ]
 
-def seed_database():
+def seed_database(drop_first=False):
     db: Session = SessionLocal()
     try:
-        print("--- CLEARING EXISTING TABLES ---")
-        Base.metadata.drop_all(bind=engine)
+        if drop_first:
+            print("--- CLEARING EXISTING TABLES ---")
+            Base.metadata.drop_all(bind=engine)
         Base.metadata.create_all(bind=engine)
+
+        # Check if users exist if not forcing drop
+        if not drop_first and db.query(User).first():
+            print("--- DATABASE ALREADY POPULATED ---")
+            return
+
 
         print("--- SEEDING DEMO USER ACCOUNTS ---")
         citizen_user = User(
@@ -625,6 +632,10 @@ def seed_database():
     finally:
         db.close()
 
+def seed_database_if_empty():
+    seed_database(drop_first=False)
+
 if __name__ == "__main__":
-    seed_database()
+    seed_database(drop_first=True)
+
 

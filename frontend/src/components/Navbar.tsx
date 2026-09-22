@@ -8,7 +8,6 @@ import { Shield, Compass, Building2, Kanban, BarChart3, Map, Menu, X, User, LogO
 import { useAuth } from "@/lib/auth";
 import { getNotifications, markNotificationRead, markAllNotificationsRead, NotificationItem } from "@/lib/api";
 import { UserProfileModal } from "@/components/UserProfileModal";
-import { LanguageSelector } from "@/components/LanguageSelector";
 import { useTranslation } from "@/lib/LanguageContext";
 
 export function Navbar() {
@@ -152,9 +151,8 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Active Auth Role, Language Selector & Notification Bell */}
+        {/* Active Auth Role & Notification Bell */}
         <div className="hidden lg:flex items-center gap-3">
-          <LanguageSelector />
           
           {user && (
             <div className="relative">
@@ -273,7 +271,7 @@ export function Navbar() {
             </div>
           ) : (
             <Link
-              href="/"
+              href="/login"
               className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs hover:-translate-y-0.5 active:scale-[0.98] transition-all flex items-center gap-1.5"
             >
               <Lock className="w-3.5 h-3.5 text-white" /> Sign In
@@ -310,10 +308,6 @@ export function Navbar() {
             transition={{ duration: 0.25 }}
             className="md:hidden bg-[#FFFDF7] border-b border-[#DDD6C8] px-4 py-4 space-y-3"
           >
-            <div className="flex items-center justify-between pb-2 border-b border-[#DDD6C8]">
-              <span className="text-xs font-bold text-[#536174]">Language:</span>
-              <LanguageSelector />
-            </div>
 
             {user && (
               <div className="p-3 rounded-xl bg-[#EFE9DC] border border-[#DDD6C8] flex items-center justify-between text-xs mb-2">
@@ -360,7 +354,7 @@ export function Navbar() {
                 </button>
               ) : (
                 <Link
-                  href="/"
+                  href="/login"
                   onClick={() => setMobileMenuOpen(false)}
                   className="text-xs text-[#0B1F3A] font-bold hover:underline"
                 >

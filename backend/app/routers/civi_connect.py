@@ -12,28 +12,25 @@ from app.schemas import (
     CiviConnectConversationResponse, CiviConnectParticipantResponse,
     CiviConnectMessageCreate, CiviConnectMessageResponse
 )
-from app.services.auth_service import get_current_user
+from app.services.auth_service import get_current_user, get_optional_current_user
 
 router = APIRouter(prefix="/api", tags=["civi-connect"])
 
 
-def check_civi_connect_authorization(user: User, proj: Project, db: Session) -> str:
+def check_civi_connect_authorization(user: Optional[User], proj: Project, db: Session) -> str:
     """
     Validates if user has permission to join/participate in project CIVI-CONNECT conversation.
     Returns the resolved role label string for display (CITIZEN, UNIVERSITY, MSME / INDUSTRY, GOVERNMENT).
-    Raises HTTPException 403 if unauthorized.
     """
+    if not user:
+        return "CITIZEN"
+
     role = user.role.upper() if user.role else "CITIZEN"
 
     if role == "GOVERNMENT_ADMIN":
         return "GOVERNMENT"
 
     if role == "CITIZEN":
-        # Submitter of original challenge or general authorized citizen participant
-        if proj.challenge and (proj.challenge.citizen_id == user.id or user.email.startswith("citizen")):
-            return "CITIZEN"
-        if user.email.startswith("citizen"):
-            return "CITIZEN"
         return "CITIZEN"
 
     if role == "UNIVERSITY":
@@ -112,7 +109,7 @@ def insert_system_message(project_id: str, text: str, db: Session):
 def get_civi_connect_room(
     project_id: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: Optional[User] = Depends(get_optional_current_user)
 ):
     proj = db.query(Project).filter(Project.id == project_id).first()
     if not proj:
@@ -120,7 +117,8 @@ def get_civi_connect_room(
 
     display_role = check_civi_connect_authorization(current_user, proj, db)
     conv = get_or_create_conversation(proj, db)
-    ensure_participant_registered(conv, current_user, display_role, db)
+    if current_user:
+        ensure_participant_registered(conv, current_user, display_role, db)
 
     # Format participant list
     participants = []
@@ -151,7 +149,7 @@ def get_civi_connect_room(
 def get_civi_connect_messages(
     project_id: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: Optional[User] = Depends(get_optional_current_user)
 ):
     proj = db.query(Project).filter(Project.id == project_id).first()
     if not proj:

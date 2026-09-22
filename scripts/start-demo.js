@@ -1,5 +1,5 @@
 const { spawn, exec } = require('child_process');
-const http = require('http');
+const net = require('net');
 const path = require('path');
 const os = require('os');
 
@@ -16,14 +16,32 @@ let backendProcess = null;
 let frontendProcess = null;
 let browserOpened = false;
 
-function checkPort(port, callback) {
-  const req = http.get(`http://127.0.0.1:${port}`, (res) => {
-    callback(true);
+function checkPortOpen(port, host = '127.0.0.1', timeout = 500) {
+  return new Promise((resolve) => {
+    const socket = new net.Socket();
+    let status = false;
+
+    socket.setTimeout(timeout);
+
+    socket.on('connect', () => {
+      status = true;
+      socket.destroy();
+    });
+
+    socket.on('timeout', () => {
+      socket.destroy();
+    });
+
+    socket.on('error', () => {
+      socket.destroy();
+    });
+
+    socket.on('close', () => {
+      resolve(status);
+    });
+
+    socket.connect(port, host);
   });
-  req.on('error', () => {
-    callback(false);
-  });
-  req.end();
 }
 
 function openBrowser(url) {
@@ -40,27 +58,30 @@ function openBrowser(url) {
   }
 }
 
-function checkFrontendReady(attempts = 0) {
+async function checkServicesReady(attempts = 0) {
   if (browserOpened) return;
   
-  const req = http.get('http://localhost:3000', () => {
-    openBrowser('http://localhost:3000');
-  });
+  const [backendOk, frontendOk] = await Promise.all([
+    checkPortOpen(8000),
+    checkPortOpen(3000)
+  ]);
+  
+  if (browserOpened) return;
 
-  req.on('error', () => {
-    if (attempts < 60) {
-      setTimeout(() => checkFrontendReady(attempts + 1), 500);
+  if (backendOk && frontendOk) {
+    openBrowser('http://localhost:3000');
+  } else {
+    if (attempts < 60) { // Retry for up to 18s
+      setTimeout(() => checkServicesReady(attempts + 1), 300);
     } else {
       openBrowser('http://localhost:3000');
     }
-  });
-
-  req.end();
+  }
 }
 
-// 1. Check & Start FastAPI Backend
-checkPort(8000, (running) => {
-  if (running) {
+async function start() {
+  const backendRunning = await checkPortOpen(8000);
+  if (backendRunning) {
     console.log('\x1b[34m[Backend]\x1b[0m FastAPI Backend is already running on Port 8000.');
   } else {
     console.log('📦 Starting FastAPI Backend (Port 8000)...');
@@ -82,13 +103,10 @@ checkPort(8000, (running) => {
       }
     });
   }
-});
 
-// 2. Check & Start Next.js Frontend
-checkPort(3000, (running) => {
-  if (running) {
+  const frontendRunning = await checkPortOpen(3000);
+  if (frontendRunning) {
     console.log('\x1b[32m[Frontend]\x1b[0m Next.js Frontend is already running on Port 3000.');
-    openBrowser('http://localhost:3000');
   } else {
     console.log('💻 Starting Next.js Frontend (Port 3000)...');
     const npmCmd = isWin ? 'npm.cmd' : 'npm';
@@ -105,10 +123,12 @@ checkPort(3000, (running) => {
     frontendProcess.stderr.on('data', (data) => {
       process.stderr.write(`\x1b[32m[Frontend]\x1b[0m ${data.toString()}`);
     });
-
-    setTimeout(() => checkFrontendReady(), 1500);
   }
-});
+
+  setTimeout(() => checkServicesReady(), 500);
+}
+
+start();
 
 // Cleanup on exit
 function cleanup() {

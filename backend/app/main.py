@@ -1,14 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
-from app.seed_data import seed_database
+from app.seed_data import seed_database_if_empty
 from app.routers import challenges, institutions, projects, analytics, auth, industry, notifications, funding, civi_connect
 
 # Create SQLite DB tables
 Base.metadata.create_all(bind=engine)
 
 # Run initial DB seed if empty
-seed_database()
+seed_database_if_empty()
+
 
 app = FastAPI(
     title="CIVIORA Digital Platform API",

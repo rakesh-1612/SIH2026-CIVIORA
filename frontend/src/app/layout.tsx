@@ -6,7 +6,6 @@ import { Footer } from "@/components/Footer";
 import { ToastProvider } from "@/components/ui/ToastProvider";
 import { AuthProvider } from "@/lib/auth";
 import { LanguageProvider } from "@/lib/LanguageContext";
-import { GoogleTranslateBridge } from "@/components/GoogleTranslateBridge";
 
 import { PageTransitionWrapper } from "@/components/animations/PageTransitionWrapper";
 
@@ -28,7 +27,6 @@ export default function RootLayout({
         <LanguageProvider>
           <AuthProvider>
             <ToastProvider>
-              <GoogleTranslateBridge />
               <Navbar />
               <main className="flex-1">
                 <PageTransitionWrapper>

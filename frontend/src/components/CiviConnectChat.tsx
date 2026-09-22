@@ -107,7 +107,7 @@ export function CiviConnectChat({ projectId, projectName, challengeTitle }: Civi
   };
 
   useEffect(() => {
-    requestAnimationFrame(() => fetchChatData(false));
+    requestAnimationFrame(() => fetchChatData(true));
 
     // Polling interval for real-time collaboration (every 3 seconds)
     const interval = setInterval(() => {

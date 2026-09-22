@@ -5,15 +5,22 @@ from typing import Dict, Any, List
 
 logger = logging.getLogger(__name__)
 
-# Try importing sentence_transformers
+# Try importing sentence_transformers lazily
 _MODEL = None
-try:
-    from sentence_transformers import SentenceTransformer
-    # Load lightweight all-MiniLM-L6-v2
-    _MODEL = SentenceTransformer("all-MiniLM-L6-v2")
-    logger.info("SentenceTransformer model loaded successfully.")
-except Exception as e:
-    logger.warning(f"Could not load SentenceTransformer: {e}. AI service will use deterministic NLP fallback.")
+_MODEL_INITIALIZED = False
+
+def _get_model():
+    global _MODEL, _MODEL_INITIALIZED
+    if not _MODEL_INITIALIZED:
+        _MODEL_INITIALIZED = True
+        try:
+            from sentence_transformers import SentenceTransformer
+            # Load lightweight all-MiniLM-L6-v2
+            _MODEL = SentenceTransformer("all-MiniLM-L6-v2")
+            logger.info("SentenceTransformer model loaded successfully.")
+        except Exception as e:
+            logger.warning(f"Could not load SentenceTransformer: {e}. AI service will use deterministic NLP fallback.")
+    return _MODEL
 
 def get_text_embedding(text: str) -> List[float]:
     """Generate dense embedding for text using sentence-transformers or TF-IDF fallback vector."""
@@ -27,9 +34,10 @@ def get_text_embedding(text: str) -> List[float]:
     except Exception:
         pass
 
-    if _MODEL is not None:
+    model = _get_model()
+    if model is not None:
         try:
-            embedding = _MODEL.encode(text, convert_to_numpy=True)
+            embedding = model.encode(text, convert_to_numpy=True)
             return embedding.tolist()
         except Exception as err:
             logger.warning(f"Embedding encoding failed: {err}")

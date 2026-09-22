@@ -74,42 +74,11 @@ export function CivicSocialCard({ challenge: initialCh, onUpdate, repostedBy }: 
 
   const [activeMediaModal, setActiveMediaModal] = useState<{ name: string; type: string; url: string } | null>(null);
 
-  // Translation toggle state
-  const [translatedText, setTranslatedText] = useState<{ title: string; description: string } | null>(null);
-  const [isTranslating, setIsTranslating] = useState<boolean>(false);
-  const [showingTranslated, setShowingTranslated] = useState<boolean>(false);
-
   // Dynamic priority state
   const [priorityScore, setPriorityScore] = useState<number>(ch.analysis?.priority_score || 50);
   const [priorityLevel, setPriorityLevel] = useState<string>(ch.analysis?.priority_level || "MEDIUM");
   const [basePriority, setBasePriority] = useState<number>(ch.analysis?.base_priority_score || ch.analysis?.priority_score || 50);
   const [communityBoost, setCommunityBoost] = useState<number>(ch.analysis?.community_boost || 0);
-
-  const handleTranslateToggle = async () => {
-    if (showingTranslated) {
-      setShowingTranslated(false);
-      return;
-    }
-    if (translatedText) {
-      setShowingTranslated(true);
-      return;
-    }
-    setIsTranslating(true);
-    try {
-      const targetLang = language || "en";
-      const resTitle = await fetch(`${API_BASE_URL}/challenges/translate?text=${encodeURIComponent(ch.title)}&target_lang=${targetLang}`).then(r => r.json());
-      const resDesc = await fetch(`${API_BASE_URL}/challenges/translate?text=${encodeURIComponent(ch.description)}&target_lang=${targetLang}`).then(r => r.json());
-      setTranslatedText({
-        title: resTitle.translated || ch.title,
-        description: resDesc.translated || ch.description
-      });
-      setShowingTranslated(true);
-    } catch (err) {
-      showToast("Translation service currently offline", "info");
-    } finally {
-      setIsTranslating(false);
-    }
-  };
 
   const resolveMediaUrl = (url?: string) => {
     if (!url) return "";
@@ -351,24 +320,14 @@ function getRoleBadgeColor(role?: string) {
           </div>
         </div>
 
-        {/* POST TITLE & TRANSLATE ACTION */}
+        {/* POST TITLE */}
         <div className="space-y-2">
           <div className="flex items-start justify-between gap-3">
             <Link href={`/explorer/${ch.id}`} className="group/title flex-1">
               <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 group-hover/title:text-indigo-600 transition-colors leading-snug tracking-tight">
-                {showingTranslated && translatedText ? translatedText.title : ch.title}
+                {ch.title}
               </h2>
             </Link>
-
-            <button
-              onClick={handleTranslateToggle}
-              disabled={isTranslating}
-              className="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-bold transition-all flex items-center gap-1 cursor-pointer shrink-0"
-              title="Translate with Google Translate"
-            >
-              <Globe className="w-3.5 h-3.5 text-indigo-600" />
-              <span>{showingTranslated ? "Original" : "Translate"}</span>
-            </button>
           </div>
 
           {/* Category & Topic Pills */}
@@ -390,7 +349,7 @@ function getRoleBadgeColor(role?: string) {
 
         {/* DESCRIPTION BODY */}
         <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-normal whitespace-pre-line">
-          {showingTranslated && translatedText ? translatedText.description : ch.description}
+          {ch.description}
         </p>
 
         {/* MEDIA EVIDENCE ATTACHMENTS */}
