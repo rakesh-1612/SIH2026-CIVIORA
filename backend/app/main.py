@@ -1,15 +1,30 @@
+import os
+import sys
+
+# Ensure backend directory is in sys.path when executed by Vercel
+backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if backend_dir not in sys.path:
+    sys.path.insert(0, backend_dir)
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 from app.database import engine, Base
 from app.seed_data import seed_database_if_empty
 from app.routers import challenges, institutions, projects, analytics, auth, industry, notifications, funding, civi_connect
 
-# Create SQLite DB tables
+# Create DB tables
 Base.metadata.create_all(bind=engine)
 
 # Run initial DB seed if empty
 seed_database_if_empty()
-
 
 app = FastAPI(
     title="CIVIORA Digital Platform API",
@@ -17,18 +32,18 @@ app = FastAPI(
     version="1.0.0"
 )
 
-import os
-from fastapi.staticfiles import StaticFiles
+cors_origins_env = os.getenv("CORS_ORIGINS")
+allowed_origins = [origin.strip() for origin in cors_origins_env.split(",") if origin.strip()] if cors_origins_env else [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
 
 # CORS configuration for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-    ],
+    allow_origins=allowed_origins,
     allow_origin_regex=r"https?://.*",
     allow_credentials=True,
     allow_methods=["*"],
@@ -36,7 +51,10 @@ app.add_middleware(
 )
 
 # Mount static files for evidence uploads
-uploads_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
+if os.getenv("VERCEL"):
+    uploads_dir = "/tmp/uploads"
+else:
+    uploads_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
 os.makedirs(uploads_dir, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 

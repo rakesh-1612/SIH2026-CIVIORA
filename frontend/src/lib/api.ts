@@ -1,6 +1,27 @@
-const rawApiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
-export const API_BASE_URL = rawApiUrl.endsWith("/api") ? rawApiUrl : `${rawApiUrl.replace(/\/$/, "")}/api`;
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL !== undefined ? process.env.NEXT_PUBLIC_API_URL : "http://127.0.0.1:8000";
+export const API_BASE_URL = rawApiUrl
+  ? (rawApiUrl.endsWith("/api") ? rawApiUrl : `${rawApiUrl.replace(/\/$/, "")}/api`)
+  : "/api";
 export const BACKEND_SERVER_URL = rawApiUrl.replace(/\/api\/?$/, "");
+
+export function resolveMediaUrl(url?: string): string {
+  if (!url) return "";
+  if (url.startsWith("data:") || url.startsWith("blob:")) {
+    return url;
+  }
+  if (url.startsWith("http://127.0.0.1:8000") || url.startsWith("http://localhost:8000")) {
+    const path = url.replace(/^http:\/\/(127\.0\.0\.1|localhost):8000/, "");
+    return BACKEND_SERVER_URL ? `${BACKEND_SERVER_URL}${path}` : path;
+  }
+  if (url.startsWith("/")) {
+    return BACKEND_SERVER_URL ? `${BACKEND_SERVER_URL}${url}` : url;
+  }
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+  return BACKEND_SERVER_URL ? `${BACKEND_SERVER_URL}/${url}` : `/${url}`;
+}
+
 
 export interface ChallengeAnalysis {
   predicted_category: string;

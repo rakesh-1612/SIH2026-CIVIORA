@@ -107,7 +107,7 @@ CHALLENGES_SEED_RAW = [
         "longitude": 85.3242,
         "urgency_level": "CRITICAL",
         "status": "IN_PROGRESS",
-        "media_files": [{"name": "ranchi_overbridge.jpg", "type": "IMAGE", "url": "http://127.0.0.1:8000/uploads/ranchi_overbridge.jpg"}]
+        "media_files": [{"name": "ranchi_overbridge.jpg", "type": "IMAGE", "url": "/uploads/ranchi_overbridge.jpg"}]
     },
     {
         "id": "CIV-2026-002",
@@ -122,7 +122,7 @@ CHALLENGES_SEED_RAW = [
         "longitude": 86.2800,
         "urgency_level": "HIGH",
         "status": "ACCEPTED",
-        "media_files": [{"name": "Jharia_Coal_Dust_Evidence.jpg", "type": "IMAGE", "url": "http://127.0.0.1:8000/uploads/Jharia_Coal_Dust_Evidence.jpg"}]
+        "media_files": [{"name": "Jharia_Coal_Dust_Evidence.jpg", "type": "IMAGE", "url": "/uploads/Jharia_Coal_Dust_Evidence.jpg"}]
     },
     {
         "id": "CIV-2026-003",

@@ -12,7 +12,7 @@ import {
   ChallengeDetail, ChallengeCommentItem,
   toggleLikeChallenge, repostChallenge, undoRepostChallenge,
   recordShareChallenge, addChallengeComment, deleteChallengeComment, reportChallengeComment,
-  API_BASE_URL, BACKEND_SERVER_URL
+  API_BASE_URL, BACKEND_SERVER_URL, resolveMediaUrl
 } from "@/lib/api";
 import { PriorityBadge } from "@/components/PriorityBadge";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -79,14 +79,6 @@ export function CivicSocialCard({ challenge: initialCh, onUpdate, repostedBy }: 
   const [priorityLevel, setPriorityLevel] = useState<string>(ch.analysis?.priority_level || "MEDIUM");
   const [basePriority, setBasePriority] = useState<number>(ch.analysis?.base_priority_score || ch.analysis?.priority_score || 50);
   const [communityBoost, setCommunityBoost] = useState<number>(ch.analysis?.community_boost || 0);
-
-  const resolveMediaUrl = (url?: string) => {
-    if (!url) return "";
-    if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:")) {
-      return url;
-    }
-    return `${BACKEND_SERVER_URL}${url.startsWith("/") ? "" : "/"}${url}`;
-  };
 
   const handleLike = async () => {
     if (!user) {

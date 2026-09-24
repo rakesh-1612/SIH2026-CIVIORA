@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Shield, MapPin, Brain, Layers, Building2, CheckCircle2, ArrowLeft, ExternalLink, Sparkles, Activity, XCircle, Kanban, Image as ImageIcon, Video, FileText, X, MessageSquare } from "lucide-react";
 
-import { getChallengeById, acceptChallenge, declineChallenge, ChallengeDetail, BACKEND_SERVER_URL } from "@/lib/api";
+import { getChallengeById, acceptChallenge, declineChallenge, ChallengeDetail, BACKEND_SERVER_URL, resolveMediaUrl } from "@/lib/api";
 import { PriorityBadge } from "@/components/PriorityBadge";
 import { StatusBadge } from "@/components/StatusBadge";
 import { FadeIn, ScaleUp } from "@/components/animations/MotionWrapper";
@@ -28,14 +28,6 @@ export default function ChallengeDetailPage() {
   const [declining, setDeclining] = useState(false);
   const [activeMediaModal, setActiveMediaModal] = useState<{ name: string; type: string; url: string } | null>(null);
   const [failedFiles, setFailedFiles] = useState<Record<string, boolean>>({});
-
-  const resolveMediaUrl = (url?: string) => {
-    if (!url) return "";
-    if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:")) {
-      return url;
-    }
-    return `${BACKEND_SERVER_URL}${url.startsWith("/") ? "" : "/"}${url}`;
-  };
 
   const handleMediaClick = (mf: { name: string; type: string; url?: string }) => {
     const targetUrl = resolveMediaUrl(mf.url);

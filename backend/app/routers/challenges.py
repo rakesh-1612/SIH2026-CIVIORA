@@ -53,11 +53,17 @@ def upload_evidence(
     else:
         f_type = "DOCUMENT"
 
+    base_backend_url = os.getenv("BACKEND_URL", "").rstrip("/")
+    if base_backend_url:
+        file_url = f"{base_backend_url}/uploads/{unique_filename}"
+    else:
+        file_url = f"/uploads/{unique_filename}"
+
     return {
         "name": file.filename,
         "filename": unique_filename,
         "type": f_type,
-        "url": f"http://127.0.0.1:8000/uploads/{unique_filename}"
+        "url": file_url
     }
 
 OFFICIAL_JHARKHAND_DISTRICTS = {
